@@ -1,3 +1,10 @@
+
+"""
+Contains class definitions relevant to the survey app (Question, Survey) and some pre-created
+Question and Survey objects.
+"""
+
+
 class Question:
     """Question on a questionnaire."""
 
