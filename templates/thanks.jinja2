@@ -8,9 +8,11 @@
 
 {% block content %}
 
-    <h1>Thank You!</h1>
+    {% for msg in get_flashed_messages() %}
+        <p>{{ msg }}</p>
+    {% endfor %}
 
-    <p>Thank you for completing this survey!</p>
+    <h1>Thank You!</h1>
     <p>You may now close this window.</p>
 
 {% endblock content %}
