@@ -53,7 +53,7 @@ def display_question(qnum):
 
     # If responses not yet initialized, redirect to homepage
     if responses is None:
-        flash("Please click 'start survey' to access the survey.")
+        flash("Please click 'begin survey' to access the survey.")
         return redirect("/")
 
     num_answered = len(responses)
@@ -104,7 +104,7 @@ def show_thanks():
 
     # If responses not yet initialized, redirect to homepage
     if responses is None:
-        flash("Please click 'start survey' to access the survey.")
+        flash("Please click 'begin survey' to access the survey.")
         return redirect("/")
 
     num_answered = len(responses)
