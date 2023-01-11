@@ -10,8 +10,20 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "alt ceva secreta"
-
 debug = DebugToolbarExtension(app)
 
-
 responses = []  # Stores user responses to questions
+
+
+@app.route("/")
+def survey_home():
+    """
+    Display a page showing survey instructions and a button that starts the survey.
+    """
+
+
+@app.route("questions/<int:qnum>")
+def display_question(qnum):
+    """
+    Display the survey question designated by the given integer 'qnum'.
+    """
