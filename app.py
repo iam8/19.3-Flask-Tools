@@ -5,7 +5,7 @@
 Main code for survey application - Flask setup, routes, and view functions.
 """
 
-from flask import Flask, request, render_template, redirect, flash
+from flask import Flask, request, render_template, redirect, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 
 from surveys import satisfaction_survey
@@ -14,8 +14,6 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "alt ceva secreta"
 debug = DebugToolbarExtension(app)
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-
-responses = []  # Stores user responses to questions
 
 
 # VIEW FUNCTIONS ----------------------------------------------------------------------------------
@@ -26,18 +24,18 @@ def survey_home():
     Display a page showing survey instructions and a button that starts the survey.
     """
 
-    num_answered = len(responses)
-    total_questions = len(satisfaction_survey.questions)
+    # num_answered = len(session["responses"])
+    # total_questions = len(satisfaction_survey.questions)
 
-    # If survey already completed, redirect to thank-you page
-    if num_answered == total_questions:
-        flash("Survey already completed!")
-        return redirect("/thanks")
+    # # If survey already completed, redirect to thank-you page
+    # if num_answered == total_questions:
+    #     flash("Survey already completed!")
+    #     return redirect("/thanks")
 
-    # If user survey is in progress, redirect to the appropriate survey question
-    if (0 < num_answered < total_questions):
-        flash("Error - survey is in progress!")
-        return redirect(f"/questions/{num_answered}")
+    # # If user survey is in progress, redirect to the appropriate survey question
+    # if (0 < num_answered < total_questions):
+    #     flash("Error - survey is in progress!")
+    #     return redirect(f"/questions/{num_answered}")
 
     title = satisfaction_survey.title
     instructions = satisfaction_survey.instructions
@@ -47,11 +45,29 @@ def survey_home():
                            survey_instructions=instructions)
 
 
+@app.route("/init_responses", methods=["POST"])
+def initialize_responses():
+    """
+    Initialize an empty list of user responses in the current user session, then redirect to the
+    first question of the survey.
+    """
+
+    session["responses"] = []
+    return redirect("/questions/0")
+
+
 @app.route("/questions/<int:qnum>")
 def display_question(qnum):
     """
     Display the survey question designated by the given integer 'qnum'.
     """
+
+    # If survey has not been started at all in this user session, redirect to survey home
+    try:
+        responses = session["responses"]
+    except KeyError:
+        flash("Attempted to access invalid URL.")
+        return redirect("/")
 
     num_answered = len(responses)
     total_questions = len(satisfaction_survey.questions)
@@ -79,11 +95,14 @@ def display_question(qnum):
 @app.route("/answers/<int:qnum>", methods=["POST"])
 def add_answer(qnum):
     """
-    Add user response for a survey question to a response list and redirect user to next question.
+    Add user response for a survey question to user session and redirect user to next question.
     """
 
     answer = request.form.get("response")
+
+    responses = session["responses"]
     responses.append(answer)
+    session["responses"] = responses
 
     return redirect(f"/questions/{qnum+1}")
 
@@ -94,13 +113,13 @@ def show_thanks():
     Display a thank-you page (for completing the full survey).
     """
 
-    num_answered = len(responses)
-    total_questions = len(satisfaction_survey.questions)
-
     # If survey not started, redirect back to homepage
-    if not num_answered:
+    if not session:
         flash("Attempted to access invalid URL.")
         return redirect("/")
+
+    num_answered = len(session["responses"])
+    total_questions = len(satisfaction_survey.questions)
 
     # If survey not complete, redirect to appropriate question page
     if num_answered != total_questions:
