@@ -37,4 +37,11 @@ def display_question(qnum):
     Display the survey question designated by the given integer 'qnum'.
     """
 
-    return render_template("survey_question.jinja2")
+    question = satisfaction_survey.questions[0]
+    text = question.question
+    choices = question.choices
+
+    return render_template("survey_question.jinja2",
+                           qnum=qnum,
+                           qtext=text,
+                           qchoices=choices)
