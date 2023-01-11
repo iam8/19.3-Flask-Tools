@@ -8,6 +8,17 @@
 
 {% block content %}
 
-    Here is a survey question.
+    <h1>Question {{ qnum }}</h1>
+
+    <form action="/questions/1">
+        <p>{{ qtext }}</p>
+
+        {% for choice in qchoices %}
+            {{ choice }}
+            <input type="radio" name="question{{ qnum }}" value="{{ choice }}">
+        {% endfor %}
+
+        <button>Submit response</button>
+    </form>
 
 {% endblock content %}
