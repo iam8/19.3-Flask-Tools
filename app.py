@@ -5,7 +5,7 @@
 Main code for survey application - Flask setup, routes, and view functions.
 """
 
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect
 from flask_debugtoolbar import DebugToolbarExtension
 
 from surveys import satisfaction_survey
@@ -40,8 +40,8 @@ def display_question(qnum):
     try:
         question = satisfaction_survey.questions[qnum]
     except IndexError:
-        # TODO: Render the thank you page here; this is just a placeholder
-        return "Reached end of list"
+        # TODO: Redirect to thank you page here; this is just a placeholder
+        return "Reached end of list - redirect to /thanks page here"
 
     text = question.question
     choices = question.choices
@@ -50,3 +50,15 @@ def display_question(qnum):
                            qnum=qnum,
                            qtext=text,
                            qchoices=choices)
+
+
+@app.route("/answers", methods=["POST"])
+def add_answer():
+    """
+    Add user response for a survey question to a response list and redirect user to next question.
+    """
+
+    answer = request.form.get("response")
+    responses.append(answer)
+
+    return redirect("/questions/0")
