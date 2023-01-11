@@ -24,19 +24,6 @@ def survey_home():
     Display a page showing survey instructions and a button that starts the survey.
     """
 
-    # num_answered = len(session["responses"])
-    # total_questions = len(satisfaction_survey.questions)
-
-    # # If survey already completed, redirect to thank-you page
-    # if num_answered == total_questions:
-    #     flash("Survey already completed!")
-    #     return redirect("/thanks")
-
-    # # If user survey is in progress, redirect to the appropriate survey question
-    # if (0 < num_answered < total_questions):
-    #     flash("Error - survey is in progress!")
-    #     return redirect(f"/questions/{num_answered}")
-
     title = satisfaction_survey.title
     instructions = satisfaction_survey.instructions
 
@@ -62,11 +49,11 @@ def display_question(qnum):
     Display the survey question designated by the given integer 'qnum'.
     """
 
-    # If survey has not been started at all in this user session, redirect to survey home
-    try:
-        responses = session["responses"]
-    except KeyError:
-        flash("Attempted to access invalid URL.")
+    responses = session.get("responses")
+
+    # If responses not yet initialized, redirect to homepage
+    if responses is None:
+        flash("Please click 'start survey' to access the survey.")
         return redirect("/")
 
     num_answered = len(responses)
@@ -113,12 +100,14 @@ def show_thanks():
     Display a thank-you page (for completing the full survey).
     """
 
-    # If survey not started, redirect back to homepage
-    if not session:
-        flash("Attempted to access invalid URL.")
+    responses = session.get("responses")
+
+    # If responses not yet initialized, redirect to homepage
+    if responses is None:
+        flash("Please click 'start survey' to access the survey.")
         return redirect("/")
 
-    num_answered = len(session["responses"])
+    num_answered = len(responses)
     total_questions = len(satisfaction_survey.questions)
 
     # If survey not complete, redirect to appropriate question page
