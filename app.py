@@ -38,11 +38,19 @@ def display_question(qnum):
     Display the survey question designated by the given integer 'qnum'.
     """
 
-    try:
-        question = satisfaction_survey.questions[qnum]
-    except IndexError:
+    num_answered = len(responses)
+    total_questions = len(satisfaction_survey.questions)
+
+    # If user manually types in URL, redirect them to the question they are supposed to be
+    # answering next
+    if qnum != num_answered:
+        return redirect(f"/questions/{num_answered}")
+
+    # If all questions answered, redirect to thank you page
+    if num_answered == total_questions:
         return redirect("/thanks")
 
+    question = satisfaction_survey.questions[qnum]
     text = question.question
     choices = question.choices
 
