@@ -37,7 +37,12 @@ def display_question(qnum):
     Display the survey question designated by the given integer 'qnum'.
     """
 
-    question = satisfaction_survey.questions[qnum]
+    try:
+        question = satisfaction_survey.questions[qnum]
+    except IndexError:
+        # TODO: Render the thank you page here; this is just a placeholder
+        return "Reached end of list"
+
     text = question.question
     choices = question.choices
 
