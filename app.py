@@ -40,8 +40,7 @@ def display_question(qnum):
     try:
         question = satisfaction_survey.questions[qnum]
     except IndexError:
-        # TODO: Redirect to thank you page here; this is just a placeholder
-        return "Reached end of list - redirect to /thanks page here"
+        return redirect("/thanks")
 
     text = question.question
     choices = question.choices
@@ -62,3 +61,12 @@ def add_answer():
     responses.append(answer)
 
     return redirect("/questions/0")
+
+
+@app.route("/thanks")
+def show_thanks():
+    """
+    Display a thank-you page (for completing the full survey).
+    """
+
+    return render_template("thanks.jinja2")
