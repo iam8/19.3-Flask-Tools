@@ -110,25 +110,3 @@ def show_thanks():
     return render_template("thanks.jinja2")
 
 # -------------------------------------------------------------------------------------------------
-
-
-# HELPER FUNCTIONS --------------------------------------------------------------------------------
-
-# def validate_url():
-#     """
-#     Check if the given URL is valid for the user to access directly; if not, redirect the user to
-#     the appropriate URL.
-
-#     Ex: if the user attempts to manually enter any URL other than the survey homepage or the
-#     question they are currently answering in the survey, they will be redirected to the appropriate
-#     question page.
-#     """
-
-#     num_answered = len(responses)
-#     total_questions = len(satisfaction_survey.questions)
-
-#     if num_answered != total_questions:
-#         flash("Attempted to access invalid URL.")
-#         return redirect(f"/questions/{num_answered}")
-
-# -------------------------------------------------------------------------------------------------
