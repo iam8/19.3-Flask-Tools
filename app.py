@@ -5,7 +5,7 @@
 Main code for survey application - Flask setup, routes, and view functions.
 """
 
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template, redirect, flash
 from flask_debugtoolbar import DebugToolbarExtension
 
 from surveys import satisfaction_survey
@@ -17,6 +17,8 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 responses = []  # Stores user responses to questions
 
+
+# VIEW FUNCTIONS ----------------------------------------------------------------------------------
 
 @app.route("/")
 def survey_home():
@@ -44,10 +46,12 @@ def display_question(qnum):
     # If user manually types in URL, redirect them to the question they are supposed to be
     # answering next
     if qnum != num_answered:
+        flash("Attempted to access invalid URL.")
         return redirect(f"/questions/{num_answered}")
 
     # If all questions answered, redirect to thank you page
     if num_answered == total_questions:
+        flash("Survey complete!")
         return redirect("/thanks")
 
     question = satisfaction_survey.questions[qnum]
@@ -78,4 +82,37 @@ def show_thanks():
     Display a thank-you page (for completing the full survey).
     """
 
+    num_answered = len(responses)
+    total_questions = len(satisfaction_survey.questions)
+
+    # If user manually types in this URL, redirect them to the question they are supposed to be
+    # answering next
+    if num_answered != total_questions:
+        flash("Attempted to access invalid URL.")
+        return redirect(f"/questions/{num_answered}")
+
     return render_template("thanks.jinja2")
+
+# -------------------------------------------------------------------------------------------------
+
+
+# HELPER FUNCTIONS --------------------------------------------------------------------------------
+
+# def validate_url():
+#     """
+#     Check if the given URL is valid for the user to access directly; if not, redirect the user to
+#     the appropriate URL.
+
+#     Ex: if the user attempts to manually enter any URL other than the survey homepage or the
+#     question they are currently answering in the survey, they will be redirected to the appropriate
+#     question page.
+#     """
+
+#     num_answered = len(responses)
+#     total_questions = len(satisfaction_survey.questions)
+
+#     if num_answered != total_questions:
+#         flash("Attempted to access invalid URL.")
+#         return redirect(f"/questions/{num_answered}")
+
+# -------------------------------------------------------------------------------------------------
