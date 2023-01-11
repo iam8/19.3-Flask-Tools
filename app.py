@@ -37,7 +37,7 @@ def display_question(qnum):
     Display the survey question designated by the given integer 'qnum'.
     """
 
-    question = satisfaction_survey.questions[0]
+    question = satisfaction_survey.questions[qnum]
     text = question.question
     choices = question.choices
 
