@@ -10,7 +10,7 @@
 
     <h1>Question {{ qnum }}</h1>
 
-    <form action="/answers" method="POST">
+    <form action="/answers/{{ qnum }}" method="POST">
         <p>{{ qtext }}</p>
 
         {% for choice in qchoices %}
