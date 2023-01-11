@@ -13,8 +13,10 @@ from surveys import satisfaction_survey
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "alt ceva secreta"
 debug = DebugToolbarExtension(app)
+app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 responses = []  # Stores user responses to questions
+# curr_qnum = 0  # Tracks which question number the user is on
 
 
 @app.route("/")
@@ -51,8 +53,8 @@ def display_question(qnum):
                            qchoices=choices)
 
 
-@app.route("/answers", methods=["POST"])
-def add_answer():
+@app.route("/answers/<int:qnum>", methods=["POST"])
+def add_answer(qnum):
     """
     Add user response for a survey question to a response list and redirect user to next question.
     """
@@ -60,7 +62,7 @@ def add_answer():
     answer = request.form.get("response")
     responses.append(answer)
 
-    return redirect("/questions/0")
+    return redirect(f"/questions/{qnum+1}")
 
 
 @app.route("/thanks")
