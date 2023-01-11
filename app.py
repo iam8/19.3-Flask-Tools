@@ -16,7 +16,6 @@ debug = DebugToolbarExtension(app)
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 responses = []  # Stores user responses to questions
-# curr_qnum = 0  # Tracks which question number the user is on
 
 
 @app.route("/")
