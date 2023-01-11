@@ -10,11 +10,11 @@
 
     <h1>Question {{ qnum }}</h1>
 
-    <form action="/questions/{{ qnum+1 }}">
+    <form action="/answers" method="POST">
         <p>{{ qtext }}</p>
 
         {% for choice in qchoices %}
-            <input type="radio" name="question{{ qnum }}" value="{{ choice }}">
+            <input type="radio" name="response" value="{{ choice }}">
             {{ choice }}
             <br>
         {% endfor %}
