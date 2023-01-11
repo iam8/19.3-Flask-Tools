@@ -56,15 +56,15 @@ def display_question(qnum):
     num_answered = len(responses)
     total_questions = len(satisfaction_survey.questions)
 
-    # Redirect to appropriate question if user manually types in non-current question URL
-    if qnum != num_answered:
-        flash("Attempted to access invalid URL.")
-        return redirect(f"/questions/{num_answered}")
-
     # If all questions answered, redirect to thank you page
     if num_answered == total_questions:
         flash("Survey complete!")
         return redirect("/thanks")
+
+    # Redirect to appropriate question if user manually types in non-current question URL
+    if qnum != num_answered:
+        flash("Attempted to access invalid URL.")
+        return redirect(f"/questions/{num_answered}")
 
     question = satisfaction_survey.questions[qnum]
     text = question.question
