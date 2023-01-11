@@ -21,8 +21,10 @@ def survey_home():
     Display a page showing survey instructions and a button that starts the survey.
     """
 
+    return render_template("survey_home.jinja2")
 
-@app.route("questions/<int:qnum>")
+
+@app.route("/questions/<int:qnum>")
 def display_question(qnum):
     """
     Display the survey question designated by the given integer 'qnum'.
