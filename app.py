@@ -12,8 +12,11 @@ from surveys import satisfaction_survey
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "alt ceva secreta"
-debug = DebugToolbarExtension(app)
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+
+debug = DebugToolbarExtension(app)
+
+RESPONSES_KEY = "responses"
 
 
 # VIEW FUNCTIONS ----------------------------------------------------------------------------------
@@ -39,7 +42,7 @@ def initialize_responses():
     first question of the survey.
     """
 
-    session["responses"] = []
+    session[RESPONSES_KEY] = []
     return redirect("/questions/0")
 
 
@@ -49,7 +52,7 @@ def display_question(qnum):
     Display the survey question designated by the given integer 'qnum'.
     """
 
-    responses = session.get("responses")
+    responses = session.get(RESPONSES_KEY)
 
     # If responses not yet initialized, redirect to homepage
     if responses is None:
@@ -79,19 +82,19 @@ def display_question(qnum):
                            qchoices=choices)
 
 
-@app.route("/answers/<int:qnum>", methods=["POST"])
-def add_answer(qnum):
+@app.route("/answers", methods=["POST"])
+def add_answer():
     """
     Add user response for a survey question to user session and redirect user to next question.
     """
 
     answer = request.form.get("response")
 
-    responses = session["responses"]
+    responses = session[RESPONSES_KEY]
     responses.append(answer)
-    session["responses"] = responses
+    session[RESPONSES_KEY] = responses
 
-    return redirect(f"/questions/{qnum+1}")
+    return redirect(f"/questions/{len(responses)}")
 
 
 @app.route("/thanks")
@@ -100,7 +103,7 @@ def show_thanks():
     Display a thank-you page (for completing the full survey).
     """
 
-    responses = session.get("responses")
+    responses = session.get(RESPONSES_KEY)
 
     # If responses not yet initialized, redirect to homepage
     if responses is None:
@@ -116,8 +119,8 @@ def show_thanks():
         flash("Attempted to access invalid URL.")
         return redirect(f"/questions/{num_answered}")
 
-    # Make a dict of questions and corresponding responses
-    ques_dict = dict(zip(questions, session["responses"]))
+    # For further study: make a dict of questions and corresponding responses
+    ques_dict = dict(zip(questions, session[RESPONSES_KEY]))
 
     return render_template("thanks.jinja2", q_and_res=ques_dict)
 
