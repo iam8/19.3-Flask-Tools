@@ -9,6 +9,15 @@
 {% block content %}
 
     <h1>Thank You!</h1>
+
+    <h3>Survey Responses:</h3>
+
+    <ol>
+        {% for q, r in q_and_res.items() %}
+            <li>{{ q.question }} <b>{{ r }}</b></li>
+        {% endfor %}
+    </ol>
+
     <p>You may now close this window.</p>
 
 {% endblock content %}
