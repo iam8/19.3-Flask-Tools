@@ -13,8 +13,8 @@
     <h3>Survey Responses:</h3>
 
     <ol>
-        {% for q, r in q_and_res.items() %}
-            <li>{{ q.question }} <b>{{ r }}</b></li>
+        {% for ques, res in q_and_res.items() %}
+            <li>{{ ques.question }} <b>{{ res }}</b></li>
         {% endfor %}
     </ol>
 
