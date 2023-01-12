@@ -107,14 +107,18 @@ def show_thanks():
         flash("Please click 'begin survey' to access the survey.")
         return redirect("/")
 
+    questions = satisfaction_survey.questions
     num_answered = len(responses)
-    total_questions = len(satisfaction_survey.questions)
+    total_questions = len(questions)
 
     # If survey not complete, redirect to appropriate question page
     if num_answered != total_questions:
         flash("Attempted to access invalid URL.")
         return redirect(f"/questions/{num_answered}")
 
-    return render_template("thanks.jinja2")
+    # Make a dict of questions and corresponding responses
+    ques_dict = dict(zip(questions, session["responses"]))
+
+    return render_template("thanks.jinja2", q_and_res=ques_dict)
 
 # -------------------------------------------------------------------------------------------------
